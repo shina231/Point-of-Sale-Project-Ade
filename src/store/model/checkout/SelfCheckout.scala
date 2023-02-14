@@ -2,35 +2,50 @@ package store.model.checkout
 
 import store.model.items.Item
 
+
 class SelfCheckout {
+  var cashString: String = "cash or credit"
+  var lilItem :Item = null
+  var state: State = new On(this)
+  var rescan: State = new rescanState(this)
+  var state3:State = new thirdState(this)
+  // var state4:State = new State4(this)
+  var myStoreInv : Map[String,Item] = Map()
+  var errorInput : Item = new Item("error",0.0)
+  var displayStr: String = ""
+  var emptyStr:String  = ""
+  var mycart: List[Item] = List()
+  var emptyCart: List[Item] = List()
+
 
   def addItemToStore(barcode: String, item: Item): Unit = {
-    // This method adds an item to your store's checkout system. It does not add an item to the customer's cart
-    // TODO
+    myStoreInv += (barcode -> item)
   }
 
+
   def numberPressed(number: Int): Unit = {
-    // TODO
+    this.state.numberPressed(number)
   }
 
   def clearPressed(): Unit = {
-    // TODO
+    this.state.clearPressed()
   }
 
   def enterPressed(): Unit = {
-    // TODO
+    this.state.enterPressed()
   }
 
   def checkoutPressed(): Unit = {
-    // TODO
+    this.state.checkoutPressed()
   }
 
   def cashPressed(): Unit = {
-    // TODO
+    this.state.cashPressed()
   }
 
   def creditPressed(): Unit = {
-    // TODO
+    this.state.creditPressed()
+
   }
 
   def loyaltyCardPressed(): Unit = {
@@ -38,27 +53,37 @@ class SelfCheckout {
   }
 
   def displayString(): String = {
-    ""
-    // TODO
-  }
+    this.state.displayString()
+ }
 
   def itemsInCart(): List[Item] = {
-    List()
+    this.state.itemsInCart()
   }
 
   def subtotal(): Double = {
-    0.0
+    var myAcc:Double = 0.0
+    for (i <- mycart){
+      myAcc += i.price()
+    }
+    myAcc
   }
 
   def tax(): Double = {
-    0.0
+    var myAcc: Double = 0.0
+    for (i <- mycart) {
+      myAcc += i.tax
+    }
+    myAcc
   }
 
   def total(): Double = {
-    0.0
+    this.subtotal() + this.tax()
   }
 
   def prepareStore(): Unit = {
+    var Grapes: Item = new Item("Welchs", 10.0)
+    addItemToStore("35", Grapes)
+
     // Similar to openMap in the Pale Blue Dot assignment, this method is not required and is
     // meant to help you run manual tests.
     //
@@ -71,8 +96,9 @@ class SelfCheckout {
     // write a similar method in your Test Suite classes.
 
     // Example usage:
-    //val testItem: Item = new Item("test item", 100.0)
-    //this.addItemToStore("472", testItem)
-  }
+    //   val testItem: Item = new Item("test item", 100.0)
+    //    this.addItemToStore("472", testItem)
 
+
+  }
 }
